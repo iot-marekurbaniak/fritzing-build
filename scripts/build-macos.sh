@@ -64,6 +64,12 @@ while IFS= read -r quazip; do
   fi
 done < <(find "$ROOT"/quazip-*/lib -name 'libquazip1-qt6*.dylib' -type f)
 "$QT_ROOT/bin/macdeployqt" "$BUNDLE" -verbose=1 -libpath="$QT_ROOT/lib"
+# macdeployqt rewrites the install names of the plain dylibs it copies into Contents/Frameworks
+# without re-signing them. GitHub runners tolerate the stale signature, but on a user's Apple
+# silicon Mac dyld kills the app at start-up (SIGKILL Code Signature Invalid, libquazip).
+while IFS= read -r dylib; do
+  codesign --force --sign - "$dylib"
+done < <(find "$BUNDLE/Contents/Frameworks" -maxdepth 1 -name '*.dylib' -type f)
 
 # --------------------------------------------------------------------------------------------------
 # ngspice runtime, after macdeployqt so that it does not try to redeploy a non-Qt library.
@@ -147,6 +153,16 @@ for binary in "${MACHO[@]}"; do
   ESCAPED=$(otool -L "$binary" | tail -n +2 | awk '$1 ~ /^\// && $1 !~ /^\/usr\/lib\// && $1 !~ /^\/System\// {print $1}')
   [[ -z "$ESCAPED" ]] || { echo "$binary still references libraries outside the bundle: $ESCAPED" >&2; exit 5; }
 done
+
+# The runners do not enforce page hashes, so check every signed Mach-O here (a stale signature
+# passes the parts.db step above but kills the app on a user's Mac). Unsigned x86_64 files are fine.
+STALE=0
+while IFS= read -r -d '' candidate; do
+  file -b "$candidate" | grep -q '^Mach-O' || continue
+  codesign -d "$candidate" >/dev/null 2>&1 || { [[ "$ARCH" == x86_64 ]] && continue; }
+  codesign --verify --strict "$candidate" 2>&1 || { echo "invalid signature: $candidate" >&2; STALE=1; }
+done < <(find "$BUNDLE/Contents" -type f -print0)
+[[ $STALE == 0 ]] || exit 6
 
 mkdir -p "$OUT"
 rm -f "$OUT/fritzing-macos-$ARCH-unsigned.zip"
