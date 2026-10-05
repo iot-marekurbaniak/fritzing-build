@@ -52,7 +52,9 @@ cp translations/*.qm "$SUPPORT/translations/"
 find "$SUPPORT/translations" -name '*.qm' -size -128c -delete
 # The .git directory is part of the product: Fritzing reads the parts commit with libgit2 at start-up.
 cp -R "$PARTS" "$SUPPORT/fritzing-parts"
-"$QT_ROOT/bin/macdeployqt" "$BUNDLE" -verbose=1
+# libquazip refers to the Qt frameworks through @rpath; without -libpath macdeployqt resolves that rpath
+# only against the QuaZip directory, skips QtCore5Compat and the app aborts at start-up.
+"$QT_ROOT/bin/macdeployqt" "$BUNDLE" -verbose=1 -libpath="$QT_ROOT/lib"
 
 # --------------------------------------------------------------------------------------------------
 # ngspice runtime, after macdeployqt so that it does not try to redeploy a non-Qt library.
