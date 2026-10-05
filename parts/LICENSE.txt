@@ -1,0 +1,9 @@
+Creative Commons Attribution-ShareAlike 4.0 International
+
+The original simplified Fritzing part definitions and SVG artwork in this
+build kit are licensed under CC BY-SA 4.0:
+https://creativecommons.org/licenses/by-sa/4.0/legalcode
+
+Attribution: fritzing-build-kit contributors. Product names and factual pin
+labels belong to their respective owners and are used for identification.
+No warranty is provided; verify hardware orientation and electrical limits.

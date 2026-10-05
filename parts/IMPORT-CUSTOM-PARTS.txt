@@ -1,0 +1,27 @@
+CZĘŚCI PŁYTEK KURSU / COURSE BOARD PARTS — Fritzing 1.0.8
+=========================================================
+
+Paczki .fzpz w tym katalogu nie należą do oficjalnej biblioteki Fritzinga. Przygotowano je dla kursu
+na podstawie dokumentacji producentów (nazwy i kolejność pinów) z własną grafiką. Licencja: CC BY-SA 4.0
+(LICENSE.txt obok).
+
+  arduino-nano-esp32-abx00083.fzpz          Arduino Nano ESP32 ze złączami (SKU ABX00083)
+                                            widoki: płytka stykowa, schemat, PCB; USB-C u dołu
+  m5stamp-c3u-mate-k122-male-headers.fzpz   M5Stamp C3U Mate (SKU K122) — Stamp-C3U z listwami
+                                            2,54 mm (12 + 10 pinów); widoki: płytka stykowa, schemat;
+                                            BEZ widoku PCB (brak zweryfikowanego footprintu)
+
+Czujniki z kursu (DHT22, DS18B20, LM35, MQ-7) są w standardowej bibliotece Fritzinga.
+
+JAK ZAIMPORTOWAĆ
+----------------
+1. Uruchom Fritzing (Fritzing.exe na Windows, Fritzing.app na macOS).
+2. Plik → Otwórz… (File → Open…) i wskaż plik .fzpz z tego katalogu.
+3. Część pojawi się w palecie części w koszu „MINE” („Moje części”).
+4. Powtórz dla drugiego pliku. Zaimportowane części zostają w profilu użytkownika.
+
+Przed podłączeniem sprawdź orientację i napięcia w dokumentacji producenta (logika 3,3 V).
+M5Stamp C3U Mate nie ma widoku PCB — nie projektuj z nim płytek drukowanych.
+
+HOW TO IMPORT (EN): start Fritzing (Fritzing.exe / Fritzing.app), File → Open…, select a .fzpz file; the part appears in the
+"MINE" bin. The M5Stamp C3U Mate part has no PCB view (no verified footprint).

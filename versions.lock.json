@@ -1,0 +1,71 @@
+{
+  "fritzing_app": {
+    "repository": "https://github.com/fritzing/fritzing-app.git",
+    "branch": "develop",
+    "commit": "5aa56a510183c23084990a6b4481708cad24c15b",
+    "version": "1.0.8",
+    "version_evidence": [
+      "src/version/version.cpp (m_majorVersion 1, m_minorVersion 0, m_minorSubVersion 8)",
+      "FritzingInfo.plist (CFBundleShortVersionString 1.0.8)",
+      "fritzing.rc (VER_FILEVERSION 1,0,8,0)",
+      "org.fritzing.Fritzing.appdata.xml (release version 1.0.8)"
+    ]
+  },
+  "fritzing_parts": {
+    "repository": "https://github.com/fritzing/fritzing-parts.git",
+    "branch": "develop",
+    "commit": "27535f2fd02097be9bed229b75aa8e9be282a4a0"
+  },
+  "qt": {
+    "version": "6.8.3",
+    "aqtinstall": "3.3.0",
+    "windows_arch": "win64_msvc2022_64",
+    "windows_dir": "msvc2022_64",
+    "macos_arch": "clang_64",
+    "macos_dir": "macos",
+    "modules": ["qt5compat", "qtserialport"],
+    "modules_note": "qtsvg and qttools (lrelease) are part of the base package; listing qtsvg as a module makes aqt fail."
+  },
+  "dependencies": {
+    "boost": "1.85.0",
+    "clipper1": "6.4.2",
+    "libgit2": "1.7.1",
+    "ngspice": "42",
+    "quazip": "1.4",
+    "svgpp": "1.3.1",
+    "zlib": "1.3.1"
+  },
+  "windows_runtime": {
+    "ngspice": {
+      "url": "https://master.dl.sourceforge.net/project/ngspice/ng-spice-rework/old-releases/42/ngspice-42_dll_64.7z?viasf=1",
+      "sha256": "efdc6315a6adc4de957e408aac4db0b1bf63eaf74da5fcf48d1c911df92ab174"
+    }
+  },
+  "macos_runtime": {
+    "ngspice": {
+      "source": "ngspice",
+      "sha256": "737fe3846ab2333a250dfadf1ed6ebe1860af1d8a5ff5e7803c772cc4256e50a",
+      "sha256_note": "Verified locally after downloading the pinned SourceForge ngspice-42.tar.gz; bootstrap-macos.sh enforces this digest before extraction.",
+      "library": "libngspice.0.dylib",
+      "required_code_model": "analog.cm",
+      "configure": [
+        "--with-ngshared",
+        "--enable-xspice",
+        "--disable-debug",
+        "--without-x",
+        "--with-readline=no"
+      ],
+      "configure_note": "--with-ngshared builds the shared library that Fritzing loads at simulation start, --enable-xspice is what produces the code models (analog.cm and friends). OpenMP, FFTW, readline and X11 stay off so that the dylib only depends on the macOS system libraries.",
+      "bundle_note": "Fritzing looks for libngspice.0.dylib in QCoreApplication::libraryPaths() and then for ngspice/analog.cm next to it. In a macdeployqt bundle those paths are Contents/PlugIns (CFBundleCopyBuiltInPlugInsURL, and 'Plugins = PlugIns' from Contents/Resources/qt.conf) and Contents/MacOS (applicationDirPath)."
+    }
+  },
+  "sources": {
+    "boost": "https://archives.boost.io/release/1.85.0/source/boost_1_85_0.tar.gz",
+    "clipper1": "https://github.com/skyrpex/clipper/archive/refs/tags/6.4.2.tar.gz",
+    "libgit2": "https://github.com/libgit2/libgit2/archive/refs/tags/v1.7.1.tar.gz",
+    "ngspice": "https://sourceforge.net/projects/ngspice/files/ng-spice-rework/old-releases/42/ngspice-42.tar.gz/download",
+    "quazip": "https://github.com/stachenov/quazip/archive/refs/tags/v1.4.tar.gz",
+    "svgpp": "https://github.com/svgpp/svgpp/archive/refs/tags/v1.3.1.tar.gz",
+    "zlib": "https://github.com/madler/zlib/releases/download/v1.3.1/zlib-1.3.1.tar.gz"
+  }
+}
