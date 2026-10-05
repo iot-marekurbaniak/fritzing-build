@@ -52,6 +52,8 @@ cp translations/*.qm "$SUPPORT/translations/"
 find "$SUPPORT/translations" -name '*.qm' -size -128c -delete
 # The .git directory is part of the product: Fritzing reads the parts commit with libgit2 at start-up.
 cp -R "$PARTS" "$SUPPORT/fritzing-parts"
+# The course boards and their "Kurs IoT" bin, before parts.db is generated.
+python3 "$KIT/scripts/add-course-parts.py" "$SUPPORT/fritzing-parts"
 # libquazip refers to the Qt frameworks through @rpath, but it was built with an rpath to its own lib
 # directory only. macdeployqt resolves @rpath from the library's own LC_RPATH entries (-libpath does not
 # help), so QtCore5Compat was skipped and the app aborted at start-up. Add the Qt lib directory as an

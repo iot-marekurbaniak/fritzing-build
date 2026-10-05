@@ -24,8 +24,11 @@ buduje trzy warianty i udostępnia je jako artefakty przebiegu:
 - macOS: [`LOCAL-MACOS-BUILD.md`](LOCAL-MACOS-BUILD.md) — `./build-local-macos.command`
 - Windows: [`LOCAL-WINDOWS-BUILD.md`](LOCAL-WINDOWS-BUILD.md) — `build-local-windows.cmd`
 
-Lokalne skrypty dokładają obok programu katalog `custom-parts/` z częściami płytek kursu
-([`parts/dist`](parts/dist): Arduino Nano ESP32 ABX00083, M5Stamp C3U Mate K122 — bez widoku PCB).
+Części płytek kursu ([`parts/dist`](parts/dist): Arduino Nano ESP32 ABX00083, M5Stamp C3U Mate K122 —
+bez widoku PCB) są wbudowane w program: [`scripts/add-course-parts.py`](scripts/add-course-parts.py) dodaje je
+do `fritzing-parts/contrib` z zakładką „Kurs IoT” (`bins/more/kurs-iot.fzb`) przed wygenerowaniem `parts.db`.
+Dodawane są tylko nowe pliki, więc „Sprawdź aktualizacje części” ich nie usuwa. Lokalne skrypty dokładają
+ponadto katalog `custom-parts/` z paczkami `.fzpz` do ręcznego importu w innych wersjach Fritzinga.
 
 ## Pierwsze uruchomienie na macOS
 

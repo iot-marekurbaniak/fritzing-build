@@ -51,6 +51,8 @@ Get-ChildItem (Join-Path $App 'translations/*.qm') | Where-Object Length -ge 128
 foreach ($File in 'INSTALL.txt', 'README.md', 'LICENSE.CC-BY-SA', 'LICENSE.GPL2', 'LICENSE.GPL3') { Copy-Item (Join-Path $App $File) $Stage }
 # The .git directory is part of the product: Fritzing reads the parts commit with libgit2 at start-up.
 Copy-Item -Recurse $Parts (Join-Path $Stage 'fritzing-parts')
+# The course boards and their "Kurs IoT" bin, before parts.db is generated.
+Invoke-Native { python (Join-Path $PSScriptRoot 'add-course-parts.py') (Join-Path $Stage 'fritzing-parts') }
 
 # Parts database, as in the upstream release script. FMessageBox is muted in this mode, but a
 # plain QMessageBox on failure would block forever, hence the timeout.
