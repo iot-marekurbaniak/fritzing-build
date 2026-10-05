@@ -55,6 +55,8 @@ jobs:
           name: fritzing-windows-x64
           path: out/fritzing-windows-x64-unsigned.zip
           if-no-files-found: error
+          # Public repo: binaries are copied to the members-only materials repo, not kept here.
+          retention-days: 1
   macos:
     strategy:
       fail-fast: false
@@ -106,3 +108,4 @@ jobs:
           name: fritzing-${{ matrix.target }}
           path: out/fritzing-${{ matrix.target }}-unsigned.zip
           if-no-files-found: error
+          retention-days: 1
