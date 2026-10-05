@@ -156,15 +156,9 @@ for binary in "${MACHO[@]}"; do
   [[ -z "$ESCAPED" ]] || { echo "$binary still references libraries outside the bundle: $ESCAPED" >&2; exit 5; }
 done
 
-# The runners do not enforce page hashes, so check every signed Mach-O here (a stale signature
-# passes the parts.db step above but kills the app on a user's Mac). Unsigned x86_64 files are fine.
-STALE=0
-while IFS= read -r -d '' candidate; do
-  file -b "$candidate" | grep -q '^Mach-O' || continue
-  codesign -d "$candidate" >/dev/null 2>&1 || { [[ "$ARCH" == x86_64 ]] && continue; }
-  codesign --verify --strict "$candidate" 2>&1 || { echo "invalid signature: $candidate" >&2; STALE=1; }
-done < <(find "$BUNDLE/Contents" -type f -print0)
-[[ $STALE == 0 ]] || exit 6
+# The runners do not enforce page hashes, so a stale signature passes the parts.db step above but
+# kills the app on a user's Mac. Check what dyld checks (see the script for why not codesign --verify).
+python3 "$KIT/scripts/check-page-hashes.py" "$BUNDLE" "$ARCH" || exit 6
 
 mkdir -p "$OUT"
 rm -f "$OUT/fritzing-macos-$ARCH-unsigned.zip"
