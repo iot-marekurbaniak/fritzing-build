@@ -52,8 +52,17 @@ cp translations/*.qm "$SUPPORT/translations/"
 find "$SUPPORT/translations" -name '*.qm' -size -128c -delete
 # The .git directory is part of the product: Fritzing reads the parts commit with libgit2 at start-up.
 cp -R "$PARTS" "$SUPPORT/fritzing-parts"
-# libquazip refers to the Qt frameworks through @rpath; without -libpath macdeployqt resolves that rpath
-# only against the QuaZip directory, skips QtCore5Compat and the app aborts at start-up.
+# libquazip refers to the Qt frameworks through @rpath, but it was built with an rpath to its own lib
+# directory only. macdeployqt resolves @rpath from the library's own LC_RPATH entries (-libpath does not
+# help), so QtCore5Compat was skipped and the app aborted at start-up. Add the Qt lib directory as an
+# rpath (once: the dependency directory is cached between runs) and re-sign, because on arm64 a changed
+# Mach-O with a stale signature is refused by dyld.
+while IFS= read -r quazip; do
+  if ! otool -l "$quazip" | grep -qF "path $QT_ROOT/lib ("; then
+    install_name_tool -add_rpath "$QT_ROOT/lib" "$quazip"
+    codesign --force --sign - "$quazip"
+  fi
+done < <(find "$ROOT"/quazip-*/lib -name 'libquazip1-qt6*.dylib' -type f)
 "$QT_ROOT/bin/macdeployqt" "$BUNDLE" -verbose=1 -libpath="$QT_ROOT/lib"
 
 # --------------------------------------------------------------------------------------------------
